@@ -1,5 +1,6 @@
 """No-cache dla /local/ i plikow .js (poza plikami samego HA)."""
 import logging
+import types
 
 from aiohttp.hdrs import CACHE_CONTROL
 from homeassistant.components.http import static as ha_static
@@ -31,5 +32,16 @@ async def async_setup(hass, config):
 
     _handle._bez_cache = True
     klasa._handle = _handle
-    _LOGGER.info("bez_cache_local: aktywne")
+
+    # trasy utworzone przed startem integracji maja stara metode - podpinamy nowa
+    ile = 0
+    try:
+        for res in hass.http.app.router.resources():
+            if isinstance(res, klasa):
+                for route in getattr(res, "_routes", {}).values():
+                    route._handler = types.MethodType(_handle, res)
+                    ile += 1
+    except Exception:
+        _LOGGER.exception("bez_cache_local: blad przy podpinaniu tras")
+    _LOGGER.warning("bez_cache_local: aktywne, podpieto %s tras", ile)
     return True
