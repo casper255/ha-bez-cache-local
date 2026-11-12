@@ -1,0 +1,10 @@
+{
+  "domain": "bez_cache_local",
+  "name": "Bez cache /local i JS",
+  "version": "1.0.0",
+  "documentation": "https://github.com/casper255/ha-bez-cache-local",
+  "issue_tracker": "https://github.com/casper255/ha-bez-cache-local/issues",
+  "dependencies": ["http"],
+  "codeowners": ["@casper255"],
+  "iot_class": "local_push"
+}
